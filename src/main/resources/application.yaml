@@ -1,0 +1,18 @@
+spring:
+  application:
+    name: f-commerce
+
+  datasource:
+   
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+server:
+  
+
+
+
+
