@@ -4,6 +4,7 @@ import com.fproject.fcommerce.dto.AddressRequestDTO;
 import com.fproject.fcommerce.dto.AddressResponseDTO;
 import com.fproject.fcommerce.entity.Address;
 import com.fproject.fcommerce.entity.User;
+import com.fproject.fcommerce.exception.AddressNotFoundException;
 import com.fproject.fcommerce.mapper.AddressMapper;
 import com.fproject.fcommerce.repo.AddressRepo;
 
@@ -39,7 +40,7 @@ public class AddressService {
         User currentUser = getCurrentUser();
         
         Address address = addressRepo.findByIdAndUser(id, currentUser)
-                .orElseThrow(() -> new RuntimeException("Address not found or unauthorized for id: " + id));
+                .orElseThrow(() -> new AddressNotFoundException("Address not found or unauthorized for id: " + id));
         return AddressMapper.toDTO(address);
     }
 
@@ -55,7 +56,7 @@ public class AddressService {
         User currentUser = getCurrentUser();
 
         Address address = addressRepo.findByIdAndUser(id, currentUser)
-                .orElseThrow(() -> new RuntimeException("Address not found or unauthorized for id: " + id));
+                .orElseThrow(() -> new AddressNotFoundException("Address not found or unauthorized for id: " + id));
 
         address.setHouseNumber(dto.getHouseNumber());
         address.setStreet(dto.getStreet());
@@ -74,7 +75,7 @@ public class AddressService {
         User currentUser = getCurrentUser();
 
         Address address = addressRepo.findByIdAndUser(id, currentUser)
-                .orElseThrow(() -> new RuntimeException("Address not found or unauthorized for id: " + id));
+                .orElseThrow(() -> new AddressNotFoundException("Address not found or unauthorized for id: " + id));
 
         addressRepo.delete(address);
     }

@@ -22,7 +22,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(409);
         errorDto.setError("Stock was updated by another request. Please retry.");
-
         return ResponseEntity.status(409).body(errorDto);
     }
 
@@ -32,18 +31,15 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(409);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(409).body(errorDto);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<Map<String, String>> noValidArgumentException(MethodArgumentNotValidException e) {
         Map<String, String> error = new HashMap<>();
-        
         for (FieldError err : e.getBindingResult().getFieldErrors()) {
             error.put(err.getField(), err.getDefaultMessage());
         }
-
         return ResponseEntity.status(400).body(error);
     }
 
@@ -53,7 +49,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(404);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(404).body(errorDto);
     }
 
@@ -63,7 +58,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(409);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(409).body(errorDto);
     }
 
@@ -73,7 +67,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(409);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(409).body(errorDto);
     }
 
@@ -83,7 +76,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(404);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(404).body(errorDto);
     }
 
@@ -93,7 +85,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(404);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(404).body(errorDto);
     }
 
@@ -103,7 +94,6 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(404);
         errorDto.setError(e.getMessage());
-
         return ResponseEntity.status(404).body(errorDto);
     }
 
@@ -113,7 +103,69 @@ public class GlobalExceptionHandler {
         errorDto.setTimestamp(LocalDateTime.now());
         errorDto.setStatus(404);
         errorDto.setError(e.getMessage());
+        return ResponseEntity.status(404).body(errorDto);
+    }
 
+    @ExceptionHandler(OrderNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleOrderNotFound(OrderNotFoundException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(404);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(404).body(errorDto);
+    }
+
+    @ExceptionHandler(InsufficientStockException.class)
+    public ResponseEntity<ErrorResponseDto> handleInsufficientStock(InsufficientStockException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(409);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(409).body(errorDto);
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ErrorResponseDto> handleAccessDenied(AccessDeniedException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(403);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(403).body(errorDto);
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleUserNotFound(UserNotFoundException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(404);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(404).body(errorDto);
+    }
+
+    @ExceptionHandler(RoleNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleRoleNotFound(RoleNotFoundException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(404);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(404).body(errorDto);
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ErrorResponseDto> handleBadCredentials(BadCredentialsException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(401);
+        errorDto.setError(e.getMessage());
+        return ResponseEntity.status(401).body(errorDto);
+    }
+
+    @ExceptionHandler(AddressNotFoundException.class)
+    public ResponseEntity<ErrorResponseDto> handleAddressNotFound(AddressNotFoundException e) {
+        ErrorResponseDto errorDto = new ErrorResponseDto();
+        errorDto.setTimestamp(LocalDateTime.now());
+        errorDto.setStatus(404);
+        errorDto.setError(e.getMessage());
         return ResponseEntity.status(404).body(errorDto);
     }
 }

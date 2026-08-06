@@ -21,6 +21,10 @@ import com.fproject.fcommerce.entity.OrderStatus;
 import com.fproject.fcommerce.entity.User;
 import com.fproject.fcommerce.entity.IdempotencyRecord;
 import com.fproject.fcommerce.exception.CartNotFoundException;
+import com.fproject.fcommerce.exception.InventoryNotFoundException;
+import com.fproject.fcommerce.exception.InsufficientStockException;
+import com.fproject.fcommerce.exception.OrderNotFoundException;
+import com.fproject.fcommerce.exception.AccessDeniedException;
 import com.fproject.fcommerce.mapper.OrderMapper;
 import com.fproject.fcommerce.repo.CartRepo;
 import com.fproject.fcommerce.repo.InventoryRepo;
@@ -63,7 +67,7 @@ public class OrderService {
                 .orElseThrow(() -> new CartNotFoundException("Cart not found"));
 
         if (cart.getItems() == null || cart.getItems().isEmpty()) {
-            throw new RuntimeException("Cannot place order: Cart is empty");
+            throw new InsufficientStockException("Cannot place order: Cart is empty");
         }
 
         Order order = new Order();
@@ -76,10 +80,10 @@ public class OrderService {
 
         for (CartItem cartItem : cart.getItems()) {
             Inventory inventory = inventoryrepo.findByProductIdForUpdate(cartItem.getProduct().getId())
-                    .orElseThrow(() -> new RuntimeException("Inventory details not found for product: " + cartItem.getProduct().getName()));
+                    .orElseThrow(() -> new InventoryNotFoundException("Inventory details not found for product: " + cartItem.getProduct().getName()));
             
             if (inventory.getStock() < cartItem.getQuantity()) {
-                throw new RuntimeException("Insufficient stock for product: " + cartItem.getProduct().getName());
+                throw new InsufficientStockException("Insufficient stock for product: " + cartItem.getProduct().getName());
             }
 
             OrderItem orderItem = new OrderItem();
@@ -128,9 +132,9 @@ public class OrderService {
     public OrderResponseDTO getOrderById(Long id) {
         User currentUser = getCurrentUser();
         Order order = orderrepo.findById(id)
-                .orElseThrow(() -> new RuntimeException("order not found"));
+                .orElseThrow(() -> new OrderNotFoundException("Order not found with ID: " + id));
         if (!order.getUser().getId().equals(currentUser.getId())) {
-            throw new RuntimeException("access denied");
+            throw new AccessDeniedException("Access denied to view this order");
         }
         return OrderMapper.toDTO(order);
     }
